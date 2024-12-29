@@ -25,7 +25,6 @@ class Ship:
             end: tuple,
             is_drowned: bool = False
     ) -> None:
-        """ Create decks and save them to a list `self.decks`"""
         self.start = start
         self.end = end
         self.is_drowned = is_drowned
@@ -66,16 +65,11 @@ class Ship:
                 self.forbidden_cells.add((row, column))
 
     def get_deck(self, row: int, column: int) -> Deck:
-        """ Find the corresponding deck in the list"""
         for el in self.decks:
             if el.row == row and el.column == column:
                 return el
 
     def fire(self, row: int, column: int) -> None:
-        """
-        Change the `is_alive` status of the deck
-        And update the `is_drowned` value if it's needed
-        """
         self.get_deck(row, column).is_alive = False
         if all(not deck.is_alive for deck in self.decks):
             self.is_drowned = True
@@ -83,12 +77,6 @@ class Ship:
 
 class Battleship:
     def __init__(self, ships: list[tuple]) -> None:
-        """
-        Create a dict `self.field`.
-        Its keys are tuples - the coordinates of the non-empty cells,
-        A value for each cell is a reference to the ship
-        which is located in it
-        """
         self.ships = [Ship(*ship) for ship in ships]
         self.field = self.get_field()
         self._validate_field(self.ships)
@@ -132,12 +120,6 @@ class Battleship:
             forbidden_area.update(ship.forbidden_cells)
 
     def fire(self, location: tuple) -> str:
-        """
-        This function should check whether the location
-        is a key in the `self.field`
-        If it is, then it should check if this cell is the last alive
-        in the ship or not.
-        """
         if location not in self.field.keys():
             return "Miss!"
         else:
@@ -164,35 +146,3 @@ class Battleship:
             print(line)
         print("___________________________________________________")
         print("'\u25A1' - alive, '\u26A1' - hit, 'X' - drowned\n")
-
-
-if __name__ == "__main__":
-    try:
-        battle_ship = Battleship(
-            ships=[
-                ((0, 0), (0, 3)),
-                ((0, 5), (0, 6)),
-                ((0, 8), (0, 9)),
-                ((2, 0), (4, 0)),
-                ((2, 4), (2, 6)),
-                ((2, 8), (2, 9)),
-                ((9, 9), (9, 9)),
-                ((7, 7), (7, 7)),
-                ((7, 9), (7, 9)),
-                ((9, 7), (9, 7)),
-            ]
-        )
-        battle_ship.print_field()
-        print(
-            battle_ship.fire((0, 4)),  # Miss!
-            battle_ship.fire((0, 3)),  # Hit!
-            battle_ship.fire((0, 2))   # Hit!
-        )
-        print(battle_ship.print_field())
-        print(
-            battle_ship.fire((0, 1)),  # Hit!
-            battle_ship.fire((0, 0)),  # Sunk!
-        )
-        battle_ship.print_field()
-    except BattleshipActivationError as e:
-        print(e)
