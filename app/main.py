@@ -44,11 +44,10 @@ class Ship:
                 Deck(row_s, point) for point
                 in range(column_s, column_e + 1)
             ]
-        else:
-            return [
-                Deck(point, column_s) for point
-                in range(row_s, row_e + 1)
-            ]
+        return [
+            Deck(point, column_s) for point
+            in range(row_s, row_e + 1)
+        ]
 
     def get_forbidden_cells(
             self,
@@ -122,13 +121,11 @@ class Battleship:
     def fire(self, location: tuple) -> str:
         if location not in self.field.keys():
             return "Miss!"
-        else:
-            ship = self.field[location]
-            ship.fire(*location)
-            if ship.is_drowned:
-                return "Sunk!"
-            else:
-                return "Hit!"
+        ship = self.field[location]
+        ship.fire(*location)
+        if ship.is_drowned:
+            return "Sunk!"
+        return "Hit!"
 
     def print_field(self) -> None:
         base_field = [["~" for _ in range(10)] for _ in range(10)]
